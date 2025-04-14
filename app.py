@@ -76,7 +76,7 @@ def show_results():
     if st.button("🧹 清空所有数据"):
         st.session_state.major_dict = {}
         st.session_state.all_inputs = ""
-        st.experimental_rerun()
+        st.rerun()
 
 if __name__ == "__main__":
     main()
