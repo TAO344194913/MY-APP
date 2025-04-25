@@ -1,7 +1,4 @@
-streamlit
- Workbook
-Alignment, Font, Border, Side
-get_column_leter
-io
-pd
-re
+
+streamlit>=1.0.0
+openpyxl>=3.0.0
+pandas>=1.0.0
