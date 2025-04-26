@@ -136,7 +136,7 @@ def parse_input(text):
 
         # 提取并清洗学生名单
         students = []
-        for block in re.findall(r"([^（）]+)（缺勤）", record):
+        for block in re.findall(r"([^（）()]+)(?:（缺勤）|\(缺勤\))", record):
             # 同时过滤班级前缀和人数说明
             cleaned = re.sub(
                 r"^([\u4e00-\u9fa5]+\d*班?缺勤\d*人?)[:：]?",
