@@ -24,11 +24,23 @@ PROGRAM_DATA = {
 
 # 专业简称到全称的映射表（新增）
 professional_mapping = {
-    "物联网": "24物联网工程",
+     "物联网": "24物联网工程",
     "机械": "24机械设计制造及其自动化",
+    "机械设计": "24机械设计制造及其自动化",
     "大数据": "24数据科学与大数据技术",
-    "建筑电气":"24建筑电气与智能化",
-
+    "建筑电气": "24建筑电气与智能化",
+    "建筑电气对口": "24建筑电气与智能化（对口）",
+    "建筑电气（对口）": "24建筑电气与智能化（对口）",
+    "机械电子": "24机械电子工程",
+    "电气": "24电气工程及其自动化",
+    "电气工程": "24电气工程及其自动化",
+    "汽服": "24汽车服务工程",
+    "电子": "24电子信息工程",
+    "电子信息": "24电子信息工程",
+    "电子信息对口": "24电子信息工程（对口）",
+    "电子信息（对口）": "24电子信息工程（对口）",
+    "人工": "24人工智能",
+    "人工智能": "24人工智能",
 
     # 可根据需要扩展更多简称
 }
@@ -81,6 +93,26 @@ def parse_input(text):
         new_groups.append(new_group)
 
     text = ';'.join(new_groups)
+    #去除班级前面的中文数字
+    groups = text.split(';')
+
+    chinese_to_arabic = {
+        '一': '1', '二': '2', '三': '3', '四': '4'
+    }
+
+    result_groups = []
+    for group in groups:
+        found = False
+        new_group = ""
+        for i, char in enumerate(group):
+            if not found and char in chinese_to_arabic:
+                new_group += chinese_to_arabic[char]
+                found = True
+            else:
+                new_group += char
+        result_groups.append(new_group)
+
+    text = ';'.join(result_groups)
     # 预处理：在括号后添加空格防止粘连
     text = re.sub(r'（[^）]*）', lambda x: x.group(0) + ' ', text)
 
@@ -90,7 +122,7 @@ def parse_input(text):
         # 解析专业信息
         major_match = re.search(
             r"(\d{2,4})?\s*"  # 年级
-            r"([\u4e00-\u9fa5]+)"  # 专业简称
+            r"([\u4e00-\u9fa5]+(?:（[\u4e00-\u9fa5]+）)?)"  # 专业简称
             r"\d*班?",  # 班级信息
             record
         )
