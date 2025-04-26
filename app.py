@@ -275,20 +275,23 @@ def create_template_with_data():
     # 设置标题行（合并A1:U1）
     ws.merge_cells('A1:U1')
     title_cell = ws['A1']
-    title_cell.value = '2024-2025第2学期第7周24级学生晚自习出勤检查表'
+    title_cell.value = '2024-2025第2学期24级学生晚自习出勤检查表'
     title_cell.font = song_bold_font
     title_cell.alignment = Alignment(horizontal='center', vertical='center')
 
     # 第一行表头（合并A2:D3）
     ws.merge_cells('A2:A3')
     ws['A2'] = "学院"
+    ws['A2'].alignment = Alignment(horizontal='center', vertical='center')
     ws.merge_cells('B2:B3')
     ws['B2'] = "辅导员"
+    ws['B2'].alignment = Alignment(horizontal='center', vertical='center')
     ws.merge_cells('C2:C3')
     ws['C2'] = "专业"
+    ws['C2'].alignment = Alignment(horizontal='center', vertical='center')
     ws.merge_cells('D2:D3')
     ws['D2'] = "人数"
-
+    ws['D2'].alignment = Alignment(horizontal='center', vertical='center')
     # 设置第一行表头的其他部分
     days = ["星期一", "星期二", "星期三", "星期四", "星期日"]
     for i, day in enumerate(days):
@@ -346,7 +349,7 @@ def create_template_with_data():
     ws.merge_cells('B6:B7')  # 戴辰阳
     ws.merge_cells('B8:B9')  # 赵鹤
     ws.merge_cells('B10:B12')  # 马招弟
-    ws.merge_cells('B13:B15')  # 王曼曼
+    ws.merge_cells('B13:B14')  # 王曼曼
 
     # 添加缺勤名单标题（合并A17:U17）
     ws.append(["以下为该周晚自习缺勤名单"])
@@ -363,9 +366,9 @@ def create_template_with_data():
         cell.font = song_font
         cell.alignment = Alignment(horizontal='center', vertical='center')
 
-    # 添加缺勤名单数据行
+    # 添加缺勤名单数据行（修改后的合并方式）
     absentees_rows = [
-        ["", "曹支红", "24建筑电气与智能化", ""],
+        ["机电学院", "曹支红", "24建筑电气与智能化", ""],
         ["", "", "24建筑电气与智能化（对口）", ""],
         ["", "戴辰阳", "24机械电子工程", ""],
         ["", "", "24数据科学与大数据技术", ""],
@@ -378,13 +381,50 @@ def create_template_with_data():
         ["", "", "24物联网工程", ""]
     ]
 
+    # 添加行并设置合并
     for row_data in absentees_rows:
         ws.append(row_data)
-        # 合并学院和辅导员单元格（根据模板结构）
-        if row_data[1]:  # 辅导员有值时合并B列
-            start_row = ws.max_row
-            # 查找连续相同辅导员的行数（简化逻辑，实际需根据模板结构）
-            ws.merge_cells(f'B{start_row}:B{start_row}')  # 保持模板结构，实际已在数据行合并
+        current_row = ws.max_row
+
+        # 合并D到U列（D{current_row}:U{current_row}）
+        ws.merge_cells(f'D{current_row}:U{current_row}')
+
+        # 设置整行的字体和对齐方式
+        for col in ['A', 'B', 'C', 'D']:  # 实际只有A,B,C列和合并后的D-U列需要设置
+            cell = ws[f'{col}{current_row}']
+            cell.font = Font(name='宋体', size=12)
+            cell.alignment = Alignment(horizontal='center', vertical='center')
+
+    # 合并A19:A29
+    ws.merge_cells('A19:A29')
+    ws['A19'].font = Font(name='宋体', size=12)
+    ws['A19'].alignment = Alignment(horizontal='center', vertical='center')
+
+    # 合并辅导员单元格（B列）
+    # 曹支红（B19:B20）
+    ws.merge_cells('B19:B20')
+    ws['B19'].font = Font(name='宋体', size=12)
+    ws['B19'].alignment = Alignment(horizontal='center', vertical='center')
+
+    # 戴辰阳（B21:B22）
+    ws.merge_cells('B21:B22')
+    ws['B21'].font = Font(name='宋体', size=12)
+    ws['B21'].alignment = Alignment(horizontal='center', vertical='center')
+
+    # 赵鹤（B23:B24）
+    ws.merge_cells('B23:B24')
+    ws['B23'].font = Font(name='宋体', size=12)
+    ws['B23'].alignment = Alignment(horizontal='center', vertical='center')
+
+    # 马招弟（B25:B27）
+    ws.merge_cells('B25:B27')
+    ws['B25'].font = Font(name='宋体', size=12)
+    ws['B25'].alignment = Alignment(horizontal='center', vertical='center')
+
+    # 王曼曼（B28:B29）
+    ws.merge_cells('B28:B29')
+    ws['B28'].font = Font(name='宋体', size=12)
+    ws['B28'].alignment = Alignment(horizontal='center', vertical='center')
 
     # 设置所有单元格边框
     thin_border = Border(
@@ -397,6 +437,10 @@ def create_template_with_data():
     for row in ws.iter_rows(min_row=1, max_row=ws.max_row, max_col=21):
         for cell in row:
             cell.border = thin_border
+            # 确保19-29行所有单元格都设置为宋体12号，居中
+            if cell.row >= 19 and cell.row <= 29:
+                cell.font = Font(name='宋体', size=12)
+                cell.alignment = Alignment(horizontal='center', vertical='center')
 
     # 填充考勤数据
     if "attendance_data" in st.session_state:
